@@ -15,10 +15,10 @@ CFLAGS += -mthumb -mcpu=cortex-m0plus \
 	-DSAMD -DSAMD21E17 -DBLACKMAGIC -I../libopencm3/include \
 	-Iplatforms/samd -msoft-float -ffunction-sections -fdata-sections -MD
 
-LINKER_SCRIPT="platforms/samd/samd.ld"
-LDFLAGS = -mthumb -mcpu=cortex-m0plus -msoft-float -nostartfiles -lc \
-	$(CPU_FLAGS) -T$(LINKER_SCRIPT) -Wl,--gc-sections \
-	-L../libopencm3/lib -lopencm3_samd -lnosys -lm -lgcc
+LDFLAGS_BOOT := $(LDFLAGS) --specs=nano.specs -mthumb -mcpu=cortex-m0plus -msoft-float \
+	-Wl,-Map=mapfile -Wl,-T,platforms/samd/samd.ld -Wl,--gc-sections \
+	-L../libopencm3/lib -nostartfiles -lc -lopencm3_samd 
+LDFLAGS = $(LDFLAGS_BOOT) -Wl,-Ttext=0x00002000
 
 ifeq ($(ENABLE_DEBUG), 1)
 LDFLAGS += --specs=rdimon.specs
@@ -35,12 +35,9 @@ SRC +=	cdcacm.c	\
 
 all:	blackmagic_full.bin blackmagic.bin blackmagic_dfu.bin blackmagic_dfu.hex
 
-blackmagic_dfu.bin : OBJCOPY_FLAGS := --pad-to 0x00002000 --gap-fill 0xFF -j .text -j .data
-blackmagic_dfu.bin : LINKER_SCRIPT := "platforms/samd/samd_boot.ld"
-
-blackmagic_dfu: usbdfu.o
+blackmagic_dfu.elf: usbdfu.o
 	@echo "  LD      $@"
-	$(Q)$(CC) $^ -o $@ $(LDFLAGS)
+	$(Q)$(CC) $^ -o $@ $(LDFLAGS_BOOT)
 
 blackmagic_full.bin: blackmagic_dfu.bin blackmagic.bin
 	@echo "  CAT     $@"

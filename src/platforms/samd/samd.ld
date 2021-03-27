@@ -20,7 +20,7 @@
 /* Define memory regions. */
 MEMORY
 {
-	rom (rx) : ORIGIN = 0x00002000, LENGTH = 120K /* 128k - 8k for bootloader */
+	rom (rx) : ORIGIN = 0x00000000, LENGTH = 128K /* 128k - 8k for bootloader */
 	ram (rwx) : ORIGIN = 0x20000000, LENGTH = 16K
 }
 
