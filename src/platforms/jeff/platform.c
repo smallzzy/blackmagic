@@ -58,6 +58,9 @@ uint8_t button_pressed;
 
 uint8_t tpwr_enabled;
 
+// todo: fix this value
+uint32_t swd_delay_cnt = 0;
+
 void sys_tick_handler(void)
 {
 	if(running_status)

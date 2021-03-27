@@ -208,6 +208,8 @@ static inline uint16_t _gpio_get(uint32_t gpioport, uint32_t gpios)
 #define SET_IDLE_STATE(state)	{gpio_set_val(LED_PORT, LED_IDLE_RUN, state);}
 #define SET_ERROR_STATE(state)	{gpio_set_val(LED_PORT, LED_ERROR, state);}
 
+extern uint32_t swd_delay_cnt;
+
 static inline int platform_hwversion(void)
 {
 	        return 0;
