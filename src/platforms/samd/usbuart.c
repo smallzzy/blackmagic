@@ -78,8 +78,7 @@ static void usart_putc(char c)
 void usbuart_init(void)
 {
 	/* enable gpios */
-	gpio_config_special(PORTA, UART_TX_PIN, UART_PERIPH); /* tx pin */
-	gpio_config_special(PORTA, UART_RX_PIN, UART_PERIPH); /* rx pin */
+	gpio_set_af(PORTA, UART_PERIPH, UART_TX_PIN|UART_RX_PIN);
 
 	/* enable clocking to sercom0 */
 	set_periph_clk(GCLK0, GCLK_ID_SERCOM0_CORE);
@@ -111,11 +110,10 @@ int usbuart_convert_tdio(uint32_t arg)
 		return current_baud;
 	}
 
-        gpio_config_special(PORTA, TDI_PIN, UART_PERIPH_2); /* TX */
-	gpio_config_special(PORTA, TDO_PIN, UART_PERIPH_2); /* RX */
+	gpio_set_af(PORTA, UART_PERIPH_2, TDI_PIN|TDO_PIN);
 
-        /* disable USART0 (we will be using USART1 now) */
-        usart_disable(0);
+	/* disable USART0 (we will be using USART1 now) */
+	usart_disable(0);
 
 	USART_NUM = 1;
 

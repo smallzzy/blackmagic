@@ -82,9 +82,7 @@ static void usb_setup(void)
 	set_periph_clk(GCLK0, GCLK_ID_USB);
 	periph_clk_en(GCLK_ID_USB, 1);
 
-	gpio_config_special(PORTA, GPIO24, SOC_GPIO_PERIPH_G);
-	gpio_config_special(PORTA, GPIO25, SOC_GPIO_PERIPH_G);
-
+	gpio_set_af(PORTA, PORT_PMUX_FUN_G, GPIO24 | GPIO25);
 }
 
 static uint32_t timing_init(void)
@@ -101,13 +99,12 @@ static uint32_t timing_init(void)
 
 static void adc_init(void)
 {
-	gpio_config_special(ADC_PORT, ADC_POS_PIN, SOC_GPIO_PERIPH_B); /* +input */
-	gpio_config_special(ADC_PORT, ADC_REF_PIN, SOC_GPIO_PERIPH_B); /* reference */
+	gpio_set_af(ADC_PORT, PORT_PMUX_FUN_B, ADC_POS_PIN|ADC_REF_PIN);
 
 	set_periph_clk(GCLK1, GCLK_ID_ADC);
 	periph_clk_en(GCLK_ID_ADC, 1);
 
-	adc_enable(ADC_REFCTRL_VREFA,0,ADC_INPUTCTRL_GND,ADC_MUXPOS);
+	adc_enable(ADC_REFCTRL_VREFA,0,ADC_INPUTCTRL_GND, ADC_MUXPOS);
 }
 
 static void counter_init(void)
@@ -134,7 +131,7 @@ static void counter_init(void)
 
 static void button_init(void)
 {
-	gpio_config_special(BUTTON_PORT, BUTTON_PIN, SOC_GPIO_PERIPH_A);
+	gpio_set_af(BUTTON_PORT, PORT_PMUX_FUN_A, BUTTON_PIN);
 
 	/* enable bus and clock */
 	INSERTBF(PM_APBAMASK_EIC, 1, PM->apbamask);
@@ -159,34 +156,34 @@ void platform_init(void)
 
 	usb_setup();
 
-	gpio_config_output(LED_PORT, LED_IDLE_RUN, 0);
-	gpio_config_output(TMS_PORT, TMS_PIN, 0);
-	gpio_config_output(TCK_PORT, TCK_PIN, 0);
-	gpio_config_output(TDI_PORT, TDI_PIN, 0);
-
-	gpio_config_output(TMS_PORT, TMS_DIR_PIN, 0);
-	gpio_set(TMS_PORT, TMS_DIR_PIN);
+	gpio_mode_setup(LED_PORT, GPIO_MODE_OUTPUT, GPIO_CNF_PULLDOWN, LED_IDLE_RUN);
+	
+	gpio_mode_setup(TMS_PORT, GPIO_MODE_OUTPUT, GPIO_CNF_PULLDOWN, TMS_PIN);
+	gpio_mode_setup(TCK_PORT, GPIO_MODE_OUTPUT, GPIO_CNF_PULLDOWN, TCK_PIN);
+	gpio_mode_setup(TDI_PORT, GPIO_MODE_OUTPUT, GPIO_CNF_PULLDOWN, TDI_PIN);
+	gpio_mode_setup(TMS_DIR_PORT, GPIO_MODE_OUTPUT, GPIO_CNF_PULLDOWN, TMS_DIR_PIN);
+	gpio_set(TMS_DIR_PORT, TMS_DIR_PIN);
 
 	/* enable both input and output with pullup disabled by default */
-	PORT_DIRSET(SWDIO_PORT) = SWDIO_PIN;
-	PORT_PINCFG(SWDIO_PORT, SWDIO_PIN_NUM) |= GPIO_PINCFG_INEN | GPIO_PINCFG_PULLEN;
+	gpio_mode_setup(SWDIO_PORT, GPIO_MODE_INOUT, GPIO_CNF_PULLUP, SWDIO_PIN);
 	gpio_clear(SWDIO_PORT, SWDIO_PIN);
 
 	/* configure swclk_pin as output */
-	gpio_config_output(SWCLK_PORT, SWCLK_PIN, 0);
+	gpio_mode_setup(SWCLK_PORT, GPIO_MODE_OUTPUT, GPIO_CNF_PULLDOWN, SWCLK_PIN);
 	gpio_clear(SWCLK_PORT, SWCLK_PIN);
 
-	gpio_config_input(TDO_PORT, TDO_PIN, 0);
-	gpio_config_output(SRST_PORT, SRST_PIN, GPIO_OUT_FLAG_DEFAULT_HIGH);
+	gpio_mode_setup(TDO_PORT, GPIO_MODE_INPUT, GPIO_CNF_FLOAT, TDO_PIN);
+	
+	gpio_mode_setup(SRST_PORT, GPIO_MODE_OUTPUT, GPIO_CNF_PULLUP, SRST_PIN);
 	gpio_clear(SRST_PORT, SRST_PIN);
 
 	/* setup uart led, disable by default*/
-	gpio_config_output(LED_PORT_UART, LED_UART, 0);//GPIO_OUT_FLAG_DEFAULT_HIGH);
+	gpio_mode_setup(LED_PORT_UART, GPIO_MODE_OUTPUT, GPIO_CNF_PULLDOWN, LED_UART);
 	gpio_clear(LED_PORT_UART, LED_UART);
 
 	/* set up TPWR */
+	gpio_mode_setup(PWR_BR_PORT, GPIO_MODE_OUTPUT, GPIO_CNF_PULLUP, PWR_BR_PIN);
 	gpio_set(PWR_BR_PORT, PWR_BR_PIN);
-	gpio_config_output(PWR_BR_PORT, PWR_BR_PIN, GPIO_OUT_FLAG_DEFAULT_HIGH);
 
 	timing_init();
 	usbuart_init();

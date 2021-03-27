@@ -94,15 +94,16 @@ extern uint8_t running_status;
 /* Hardware definitions... */
 #define JTAG_PORT 	PORTA
 #define TDI_PORT	JTAG_PORT
-#define TMS_DIR_PORT	JTAG_PORT
 #define TMS_PORT	JTAG_PORT
 #define TCK_PORT	JTAG_PORT
 #define TDO_PORT	JTAG_PORT
-#define TMS_DIR_PIN	GPIO15
 #define TMS_PIN		GPIO0
 #define TCK_PIN		GPIO6
 #define TDI_PIN		GPIO16
 #define TDO_PIN		GPIO19
+
+#define TMS_DIR_PORT	JTAG_PORT
+#define TMS_DIR_PIN		GPIO15
 
 #define SWDIO_DIR_PORT	JTAG_PORT
 #define SWDIO_PORT 	JTAG_PORT
@@ -134,8 +135,8 @@ extern uint8_t running_status;
 
 #define UART_TX_PIN	GPIO4
 #define UART_RX_PIN	GPIO7
-#define UART_PERIPH	SOC_GPIO_PERIPH_D
-#define UART_PERIPH_2	SOC_GPIO_PERIPH_C
+#define UART_PERIPH		PORT_PMUX_FUN_D
+#define UART_PERIPH_2 	PORT_PMUX_FUN_C
 
 #define SWO_PORT	JTAG_PORT
 #define SWO_PIN		SWD_PIN
@@ -151,8 +152,8 @@ extern uint8_t running_status;
 #endif
 
 #define TMS_SET_MODE()	{ \
-	gpio_config_output(TMS_PORT, TMS_PIN, 0); \
-	gpio_set(TMS_PORT, TMS_DIR_PIN); \
+	gpio_mode_setup(TMS_PORT, GPIO_MODE_OUTPUT, GPIO_CNF_PULLDOWN, TMS_PIN); \
+	gpio_set(TMS_DIR_PORT, TMS_DIR_PIN); \
 }
 
 #define SWDIO_MODE_FLOAT() do { \

@@ -298,9 +298,7 @@ static void usb_setup(void)
         set_periph_clk(GCLK0, GCLK_ID_USB);
         periph_clk_en(GCLK_ID_USB, 1);
 
-        gpio_config_special(PORTA, GPIO24, SOC_GPIO_PERIPH_G);
-        gpio_config_special(PORTA, GPIO25, SOC_GPIO_PERIPH_G);
-
+		gpio_set_af(PORTA, PORT_PMUX_FUN_G, GPIO24 | GPIO25);
 }
 
 int main(void)
@@ -309,8 +307,7 @@ int main(void)
 
 	gclk_init(&clock);
 	//rcc_periph_clock_enable(RCC_GPIOA);
-	//gpio_config_input(BUTTON_PORT,BUTTON_PIN,GPIO_IN_FLAG_PULLUP);
-	gpio_config_input(BUTTON_PORT,BUTTON_PIN,0);
+	gpio_mode_setup(BUTTON_PORT, GPIO_MODE_INPUT, GPIO_CNF_FLOAT, BUTTON_PIN);
 
 	nvmctrl_init(0,0);
 
