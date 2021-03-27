@@ -313,3 +313,13 @@ void tc3_isr(void)
 	if (tc_interrupt_flag(3) & 16)
 		scb_reset_system();
 }
+
+void platform_max_frequency_set(uint32_t freq)
+{
+	(void)freq;
+}
+
+uint32_t platform_max_frequency_get(void)
+{
+	return 0;
+}
