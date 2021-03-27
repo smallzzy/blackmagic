@@ -41,56 +41,6 @@
 
 extern uint8_t running_status;
 
-#ifdef DEBUG_ME
-
-#define LED_PORT	PORTA
-#define LED_IDLE_RUN	GPIO11
-#define LED_ERROR	GPIO10
-
-#define TMS_PORT	PORTA
-#define TMS_PIN		GPIO1
-#define TMS_DIR_PIN	GPIO5
-
-#define TCK_PORT	PORTA
-#define TCK_PIN		GPIO2
-
-#define TDI_PORT	PORTA
-#define TDI_PIN		GPIO16
-
-#define TDO_PORT	PORTA
-#define TDO_PIN		GPIO19
-
-#define SWO_PORT	PORTA
-#define SWO_PIN		GPIO6
-
-#define SWDIO_PORT	PORTA
-#define SWDIO_PIN	TMS_PIN
-#define SWDIO_PIN_NUM	1
-
-#define SWCLK_PORT	PORTA
-#define SWCLK_PIN	TCK_PIN
-
-#define SRST_PORT	PORTA
-#define SRST_PIN	GPIO7
-
-#define LED_PORT_UART	PORTA
-#define LED_UART	GPIO12
-
-#define UART_TX_PIN	GPIO8
-#define UART_RX_PIN	GPIO9
-#define UART_PERIPH	SOC_GPIO_PERIPH_C
-#define UART_PERIPH_2	SOC_GPIO_PERIPH_C
-
-#define ADC_PORT	PORTA
-#define ADC_REF_PIN	GPIO3
-#define ADC_POS_PIN	GPIO4
-#define ADC_MUXPOS	4
-
-#define BUTTON_PORT	PORTA
-#define BUTTON_PIN	GPIO27
-
-#else
-
 /* Hardware definitions... */
 #define JTAG_PORT 	PORTA
 #define TDI_PORT	JTAG_PORT
@@ -148,8 +98,6 @@ extern uint8_t running_status;
 
 #define BUTTON_PORT	PORTA
 #define BUTTON_PIN	GPIO27
-
-#endif
 
 #define TMS_SET_MODE()	{ \
 	gpio_mode_setup(TMS_PORT, GPIO_MODE_OUTPUT, GPIO_CNF_PULLDOWN, TMS_PIN); \

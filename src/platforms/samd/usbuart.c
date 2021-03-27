@@ -86,9 +86,7 @@ void usbuart_init(void)
 
 	//usart_enable(USART_NUM, current_baud);
 	usart_setup(USART_NUM, current_baud);
-#ifndef DEBUG_ME
-        usart_set_pads(USART_NUM, 3, 0); /* bm-sam uses different pads */
-#endif
+    usart_set_pads(USART_NUM, 3, 0); /* bm-sam uses different pads */
 	usart_enable(USART_NUM, 0); /* baud==0 so setup is skipped */
 
 	usart_enable_rx_interrupt(USART_NUM);
