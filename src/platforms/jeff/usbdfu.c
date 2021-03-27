@@ -176,6 +176,7 @@ static void usbdfu_getstatus_complete(usbd_device *usbd_dev, struct usb_setup_da
 				{
 					uint32_t *dat = (uint32_t *)(prog.buf + 1);
 					nvmctrl_erase_row(*dat); //flash_erase_page(*dat);
+					break;
 				}
 			case CMD_SETADDR:
 				{
