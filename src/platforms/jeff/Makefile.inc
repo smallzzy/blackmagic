@@ -25,7 +25,8 @@ VPATH += platforms/samd
 
 SRC +=	cdcacm.c	\
 	timing.c        \
-	traceswo.o      \
+	timing_samd.c   \
+	traceswo.c      \
 	usbuart.c       \
 
 all:	blackmagic_full.bin blackmagic.bin blackmagic_dfu.bin blackmagic_dfu.hex

@@ -22,6 +22,7 @@
 #include "gdb_if.h"
 #include "cdcacm.h"
 #include "usbuart.h"
+#include "timing_samd.h"
 
 #include <libopencm3/sam/d/nvic.h>
 #include <libopencm3/sam/d/port.h>
@@ -30,7 +31,6 @@
 #include <libopencm3/sam/d/uart.h>
 #include <libopencm3/sam/d/adc.h>
 
-#include <libopencm3/cm3/systick.h>
 #include <libopencm3/cm3/scb.h>
 
 #include <libopencm3/sam/d/tc.h>
@@ -38,6 +38,7 @@
 
 static struct gclk_hw clock = {
 	.gclk0 = SRC_DFLL48M,
+	.gclk0_div = 2,
 	.gclk1 = SRC_OSC8M,
 	.gclk1_div = 30,      /* divide clock for ADC  */
 	.gclk2 = SRC_OSC8M,
@@ -51,30 +52,12 @@ static struct gclk_hw clock = {
 
 extern void trace_tick(void);
 
-uint8_t running_status;
-static volatile uint32_t time_ms;
-
 uint8_t button_pressed;
 
 uint8_t tpwr_enabled;
 
 // todo: fix this value
 uint32_t swd_delay_cnt = 0;
-
-void sys_tick_handler(void)
-{
-	if(running_status)
-		gpio_toggle(LED_PORT, LED_IDLE_RUN);
-
-	time_ms += 10;
-
-	uart_pop();
-}
-
-uint32_t platform_time_ms(void)
-{
-	return time_ms;
-}
 
 static void usb_setup(void)
 {
@@ -88,17 +71,6 @@ static void usb_setup(void)
 	gpio_set_af(PORTA, PORT_PMUX_FUN_G, GPIO24 | GPIO25);
 }
 
-static uint32_t timing_init(void)
-{
-	uint32_t cal = 0;
-
-	systick_set_clocksource(STK_CSR_CLKSOURCE_AHB);
-	systick_set_reload(4800);	/* Interrupt us at 10 Hz */
-	systick_interrupt_enable();
-
-	systick_counter_enable();
-	return cal;
-}
 
 static void adc_init(void)
 {
@@ -188,7 +160,7 @@ void platform_init(void)
 	gpio_mode_setup(PWR_BR_PORT, GPIO_MODE_OUTPUT, GPIO_CNF_PULLUP, PWR_BR_PIN);
 	gpio_set(PWR_BR_PORT, PWR_BR_PIN);
 
-	timing_init();
+	platform_timing_init();
 	usbuart_init();
 	cdcacm_init();
 	adc_init();
