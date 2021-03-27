@@ -131,7 +131,7 @@ void platform_init(void)
 
 	usb_setup();
 
-	gpio_mode_setup(LED_PORT, GPIO_MODE_OUTPUT, GPIO_CNF_PULLDOWN, LED_IDLE_RUN);
+	gpio_mode_setup(LED_PORT, GPIO_MODE_OUTPUT, GPIO_CNF_PULLDOWN, LED_IDLE_RUN|LED_UART|LED_ERROR);
 	
 	gpio_mode_setup(TMS_PORT, GPIO_MODE_OUTPUT, GPIO_CNF_PULLDOWN, TMS_PIN);
 	gpio_mode_setup(TCK_PORT, GPIO_MODE_OUTPUT, GPIO_CNF_PULLDOWN, TCK_PIN);
@@ -151,10 +151,6 @@ void platform_init(void)
 	
 	gpio_mode_setup(SRST_PORT, GPIO_MODE_OUTPUT, GPIO_CNF_PULLUP, SRST_PIN);
 	gpio_clear(SRST_PORT, SRST_PIN);
-
-	/* setup uart led, disable by default*/
-	gpio_mode_setup(LED_PORT_UART, GPIO_MODE_OUTPUT, GPIO_CNF_PULLDOWN, LED_UART);
-	gpio_clear(LED_PORT_UART, LED_UART);
 
 	/* set up TPWR */
 	gpio_mode_setup(PWR_BR_PORT, GPIO_MODE_OUTPUT, GPIO_CNF_PULLUP, PWR_BR_PIN);
