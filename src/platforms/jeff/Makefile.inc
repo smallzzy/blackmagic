@@ -29,16 +29,11 @@ SRC +=	cdcacm.c	\
 	traceswo.c      \
 	usbuart.c       \
 
-all:	blackmagic_full.bin blackmagic.bin blackmagic_dfu.bin blackmagic_dfu.hex
+all: blackmagic.bin blackmagic_dfu.bin blackmagic_dfu.hex
 
 blackmagic_dfu.elf: usbdfu.o
 	@echo "  LD      $@"
 	$(Q)$(CC) $^ -o $@ $(LDFLAGS_BOOT)
 
-blackmagic_full.bin: blackmagic_dfu.bin blackmagic.bin
-	@echo "  CAT     $@"
-	$(Q)cp blackmagic.bin jeff-$(shell git describe --tags --always --dirty).bin
-	$(Q)cat $^ > $@
-
 host_clean:
-	$(Q)$(RM) -f blackmagic.bin blackmagic_full.bin blackmagic_dfu blackmagic_dfu.bin blackmagic_dfu.hex jeff*.bin
+	$(Q)$(RM) -f blackmagic.bin blackmagic_dfu.bin blackmagic_dfu.hex
