@@ -296,8 +296,7 @@ static void usb_setup(void)
         INSERTBF(PM_APBBMASK_USB, 1, PM->apbbmask);
 
         /* enable clocking to usb */
-        set_periph_clk(GCLK0, GCLK_ID_USB);
-        periph_clk_en(GCLK_ID_USB, 1);
+		gclk_set_periph(GCLK_USB, 3, GCLK_PERIPH_CLKEN);
 
 		gpio_set_af(PORTA, PORT_PMUX_FUN_G, GPIO24 | GPIO25);
 }

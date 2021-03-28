@@ -65,8 +65,7 @@ static void usb_setup(void)
 	INSERTBF(PM_APBBMASK_USB, 1, PM->apbbmask);
 
 	/* enable clocking to usb */
-	set_periph_clk(GCLK0, GCLK_ID_USB);
-	periph_clk_en(GCLK_ID_USB, 1);
+	gclk_set_periph(GCLK_USB, 3, GCLK_PERIPH_CLKEN);
 
 	gpio_set_af(PORTA, PORT_PMUX_FUN_G, GPIO24 | GPIO25);
 }
@@ -76,8 +75,7 @@ static void adc_init(void)
 {
 	gpio_set_af(ADC_PORT, PORT_PMUX_FUN_B, ADC_POS_PIN|ADC_REF_PIN);
 
-	set_periph_clk(GCLK1, GCLK_ID_ADC);
-	periph_clk_en(GCLK_ID_ADC, 1);
+	gclk_set_periph(GCLK_ADC, 1, GCLK_PERIPH_CLKEN);
 
 	adc_enable(ADC_REFCTRL_VREFA,0,ADC_INPUTCTRL_GND, ADC_MUXPOS);
 }
@@ -87,8 +85,7 @@ static void counter_init(void)
 	/* enable bus and clock */
 	INSERTBF(PM_APBCMASK_TC3, 1, PM->apbcmask);
 
-	set_periph_clk(GCLK2, GCLK_ID_TC3);
-	periph_clk_en(GCLK_ID_TC3, 1);
+	gclk_set_periph(GCLK_TC3, 2, GCLK_PERIPH_CLKEN);
 
 	/* reset */
 	tc_reset(3);
@@ -111,8 +108,7 @@ static void button_init(void)
 	/* enable bus and clock */
 	INSERTBF(PM_APBAMASK_EIC, 1, PM->apbamask);
 
-	set_periph_clk(GCLK0, GCLK_ID_EIC);
-	periph_clk_en(GCLK_ID_EIC, 1);
+	gclk_set_periph(GCLK_EIC, 0, GCLK_PERIPH_CLKEN);
 
 	/* configure r/f edge, enable filtering */
 	eic_set_config(15, 1, EIC_FALL);

@@ -81,8 +81,7 @@ void usbuart_init(void)
 	gpio_set_af(PORTA, UART_PERIPH, UART_TX_PIN|UART_RX_PIN);
 
 	/* enable clocking to sercom0 */
-	set_periph_clk(GCLK0, GCLK_ID_SERCOM0_CORE);
-	periph_clk_en(GCLK_ID_SERCOM0_CORE, 1);
+	gclk_set_periph(GCLK_SERCOM0_CORE, 0, GCLK_PERIPH_CLKEN);
 
 	//usart_enable(USART_NUM, current_baud);
 	usart_setup(USART_NUM, current_baud);
@@ -115,9 +114,8 @@ int usbuart_convert_tdio(uint32_t arg)
 
 	USART_NUM = 1;
 
-        /* Select and Enable system clock */
-	set_periph_clk(GCLK0, GCLK_ID_SERCOM1_CORE);
-        periph_clk_en(GCLK_ID_SERCOM1_CORE, 1);
+    /* Select and Enable system clock */
+	gclk_set_periph(GCLK_SERCOM0_CORE, 0, GCLK_PERIPH_CLKEN);
 
 	usart_setup(1, current_baud);
         usart_set_pads(1, 3, 0); /* uses different pads than the default */
