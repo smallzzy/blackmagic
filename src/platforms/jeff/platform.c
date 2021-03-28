@@ -70,7 +70,6 @@ static void usb_setup(void)
 	gpio_set_af(PORTA, PORT_PMUX_FUN_G, GPIO24 | GPIO25);
 }
 
-
 static void adc_init(void)
 {
 	gpio_set_af(ADC_PORT, PORT_PMUX_FUN_B, ADC_POS_PIN|ADC_REF_PIN);
@@ -85,7 +84,7 @@ static void counter_init(void)
 	/* enable bus and clock */
 	INSERTBF(PM_APBCMASK_TC3, 1, PM->apbcmask);
 
-	gclk_set_periph(GCLK_TC3, 2, GCLK_PERIPH_CLKEN);
+	gclk_set_periph(GCLK_TCC2_TC3, 2, GCLK_PERIPH_CLKEN);
 
 	/* reset */
 	tc_reset(3);
